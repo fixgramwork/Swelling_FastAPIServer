@@ -6,5 +6,4 @@ data:
   APP_ENV: kubernetes
   LOG_LEVEL: INFO
   USERS_SERVICE_URL: http://users:8001
-  SWELLING_SERVICE_URL: http://swelling:8002
   NOTIFICATIONS_SERVICE_URL: http://notifications:8003

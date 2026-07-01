@@ -20,7 +20,6 @@ def service_map() -> dict[str, str]:
     settings = get_gateway_settings()
     return {
         "users": settings.users_service_url.rstrip("/"),
-        "swelling": settings.swelling_service_url.rstrip("/"),
         "notifications": settings.notifications_service_url.rstrip("/"),
     }
 

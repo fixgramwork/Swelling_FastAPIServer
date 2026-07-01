@@ -7,13 +7,11 @@ services:
         PORT: 8000
     environment:
       USERS_SERVICE_URL: http://users:8001
-      SWELLING_SERVICE_URL: http://swelling:8002
       NOTIFICATIONS_SERVICE_URL: http://notifications:8003
     ports:
       - "8000:8000"
     depends_on:
       - users
-      - swelling
       - notifications
 
   users:
@@ -22,8 +20,13 @@ services:
       args:
         SERVICE_MODULE: services.users.app.main:app
         PORT: 8001
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-swelling}:${POSTGRES_PASSWORD:-swelling_password}@database:5432/${POSTGRES_DB:-swelling}
     ports:
       - "8001:8001"
+    depends_on:
+      database:
+        condition: service_healthy
 
   swelling:
     build:
@@ -31,8 +34,13 @@ services:
       args:
         SERVICE_MODULE: services.swelling.app.main:app
         PORT: 8002
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-swelling}:${POSTGRES_PASSWORD:-swelling_password}@database:5432/${POSTGRES_DB:-swelling}
     ports:
       - "8002:8002"
+    depends_on:
+      database:
+        condition: service_healthy
 
   notifications:
     build:
@@ -40,5 +48,30 @@ services:
       args:
         SERVICE_MODULE: services.notifications.app.main:app
         PORT: 8003
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-swelling}:${POSTGRES_PASSWORD:-swelling_password}@database:5432/${POSTGRES_DB:-swelling}
     ports:
       - "8003:8003"
+    depends_on:
+      database:
+        condition: service_healthy
+
+  database:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-swelling}
+      POSTGRES_USER: ${POSTGRES_USER:-swelling}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-swelling_password}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  postgres_data:

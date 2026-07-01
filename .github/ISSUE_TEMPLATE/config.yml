@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Expo 문서
+    url: https://docs.expo.dev/
+    about: Expo 실행, 빌드, 네이티브 확장 관련 공식 문서입니다.

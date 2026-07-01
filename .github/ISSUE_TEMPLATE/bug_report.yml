@@ -1,0 +1,73 @@
+name: Bug Report
+description: 앱에서 발생한 버그나 예상과 다른 동작을 제보합니다.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 문제 요약
+      description: 어떤 문제가 발생했는지 짧게 적어주세요.
+      placeholder: 예) 교정 적용 버튼을 눌러도 문장이 바뀌지 않습니다.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 재현 방법
+      description: 문제를 재현할 수 있는 순서를 적어주세요.
+      placeholder: |
+        1. 앱을 실행합니다.
+        2. 작성 문장에 "..."을 입력합니다.
+        3. 교정 적용을 누릅니다.
+        4. 문제가 발생합니다.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 기대한 동작
+      description: 원래 어떤 동작을 기대했는지 적어주세요.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 실제 동작
+      description: 실제로 어떤 동작이 발생했는지 적어주세요.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: 플랫폼
+      options:
+        - iOS
+        - Android
+        - Web
+        - 공통
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: 기기/환경
+      placeholder: 예) iPhone 15, iOS 18 / Galaxy S24, Android 15 / Expo Go
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 로그 또는 스크린샷
+      description: Metro 로그, 에러 메시지, 스크린샷이 있으면 첨부해주세요.
+      render: shell
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: 추가 정보
+      description: 원인 추정, 관련 링크, 임시 해결 방법이 있으면 적어주세요.
