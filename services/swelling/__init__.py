@@ -1,0 +1,1 @@
+"""Swelling report service."""

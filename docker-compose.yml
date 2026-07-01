@@ -1,0 +1,44 @@
+services:
+  gateway:
+    build:
+      context: .
+      args:
+        SERVICE_MODULE: services.gateway.app.main:app
+        PORT: 8000
+    environment:
+      USERS_SERVICE_URL: http://users:8001
+      SWELLING_SERVICE_URL: http://swelling:8002
+      NOTIFICATIONS_SERVICE_URL: http://notifications:8003
+    ports:
+      - "8000:8000"
+    depends_on:
+      - users
+      - swelling
+      - notifications
+
+  users:
+    build:
+      context: .
+      args:
+        SERVICE_MODULE: services.users.app.main:app
+        PORT: 8001
+    ports:
+      - "8001:8001"
+
+  swelling:
+    build:
+      context: .
+      args:
+        SERVICE_MODULE: services.swelling.app.main:app
+        PORT: 8002
+    ports:
+      - "8002:8002"
+
+  notifications:
+    build:
+      context: .
+      args:
+        SERVICE_MODULE: services.notifications.app.main:app
+        PORT: 8003
+    ports:
+      - "8003:8003"

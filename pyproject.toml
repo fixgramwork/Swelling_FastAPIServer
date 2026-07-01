@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=69.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "swelling-fastapi-server"
+version = "0.1.0"
+description = "FastAPI MSA backend server for Swelling"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "email-validator>=2.2.0",
+    "fastapi>=0.115.0",
+    "httpx>=0.27.0",
+    "uvicorn[standard]>=0.30.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2.0",
+    "ruff>=0.5.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src", "."]
+include = ["swelling_common*", "services*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
