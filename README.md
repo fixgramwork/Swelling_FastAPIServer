@@ -38,6 +38,32 @@ cd ~/Desktop/Swelling_FastAPIServer
 docker compose up --build
 ```
 
+## Kubernetes 실행
+
+기본 Kubernetes 리소스는 `k8s/base`, 로컬 개발용 오버레이는 `k8s/overlays/local`에 있습니다.
+
+```bash
+cd ~/Desktop/Swelling_FastAPIServer
+make k8s-build
+kubectl apply -k k8s/overlays/local
+kubectl port-forward -n swelling svc/gateway 8000:8000
+```
+
+kind 또는 minikube처럼 별도 노드 이미지 저장소를 쓰는 환경에서는 apply 전에 이미지를 클러스터로 로드해야 합니다.
+
+```bash
+kind load docker-image swelling-fastapi-server:local
+# 또는
+minikube image load swelling-fastapi-server:local
+```
+
+상태 확인과 삭제:
+
+```bash
+make k8s-status
+make k8s-delete
+```
+
 ## 예시 요청
 
 ```bash
@@ -62,12 +88,4 @@ make test
 
 ```bash
 origin https://github.com/fixgramwork/Swelling_FastAPIServer.git
-```
-
-초기 커밋 후 푸시:
-
-```bash
-git add .
-git commit -m "Initialize FastAPI MSA backend"
-git push -u origin main
 ```

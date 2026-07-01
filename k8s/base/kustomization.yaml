@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: swelling
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - service-account.yaml
+  - gateway.yaml
+  - users.yaml
+  - swelling.yaml
+  - notifications.yaml
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: swelling-fastapi-server
+      app.kubernetes.io/managed-by: kustomize
+    includeSelectors: true

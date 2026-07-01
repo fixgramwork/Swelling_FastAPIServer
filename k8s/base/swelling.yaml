@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swelling
+  labels:
+    app.kubernetes.io/name: swelling
+    app.kubernetes.io/component: service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swelling
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: swelling
+        app.kubernetes.io/component: service
+    spec:
+      serviceAccountName: swelling-api
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      containers:
+        - name: swelling
+          image: ghcr.io/fixgramwork/swelling-fastapi-server:0.1.0
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: swelling-service-config
+          env:
+            - name: SERVICE_MODULE
+              value: services.swelling.app.main:app
+            - name: PORT
+              value: "8002"
+          ports:
+            - name: http
+              containerPort: 8002
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: swelling
+  labels:
+    app.kubernetes.io/name: swelling
+    app.kubernetes.io/component: service
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: swelling
+  ports:
+    - name: http
+      port: 8002
+      targetPort: http
